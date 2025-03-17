@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 void initQueue(queue_t* q, int size){
-	q->queue = malloc(sizeof(int) * size);
+	q->queue = malloc((sizeof(int) * 8) * size);
 	q->capacity = size;
 	q->currentSize = 0;
 }
@@ -26,7 +26,7 @@ bool isFull(queue_t* q){
 	return false;
 }
 
-bool enqueue(queue_t* q, int value){
+bool enqueue(queue_t* q, task_t value){
 	if(isFull(q)){
 		return false;
 	}
@@ -42,13 +42,15 @@ bool dequeue(queue_t* q){
 	for(int i = 0; i < q->currentSize - 1; i++){
 		q->queue[i] = q->queue[i+1];
 	}
-	q-> currentSize--;
+	q->currentSize--;
 	return true;
 }
 
-int top(queue_t* q){
+task_t top(queue_t* q){
 	if(isEmpty(q)){
-		return -1;
+		task_t emptyTask;
+		emptyTask.taskID = -1;
+		return emptyTask;
 	}
 	return q->queue[0];
 }
@@ -57,19 +59,19 @@ void print(queue_t* q){
 	if(isEmpty(q)){
          // do nothing 
         } else {
-		for(int i = 0; i < q -> currentSize; i++){
-			printf("%d, ", q->queue[i]);
+		for(int i = 0; i < q->currentSize; i++){
+			printf("%d, ", q->queue[i].taskID);
 		}
 		printf("\n");
 	}
 }
 
-int find(queue_t* q, int value){
+int find(queue_t* q, int id){
 	if(isEmpty(q)){
                 return -1; 
         }
-	for(int i = 0; q -> currentSize; i++){
-		if(q->queue[i] == value){
+	for(int i = 0; q->currentSize; i++){
+		if(q->queue[i].taskID == id){
 			return i;
 		}
 	}

@@ -3,11 +3,6 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-typedef struct queue_Structure{
-        int* queue;
-        int capacity;
-        int currentSize;
-}queue_t;
 
 typedef struct task_Structure{
         int taskID;
@@ -15,6 +10,12 @@ typedef struct task_Structure{
         int duration;
         int* resources;
 } task_t;
+
+typedef struct queue_Structure{
+        task_t* queue;
+        int capacity;
+        int currentSize;
+}queue_t;
 
 typedef struct resource{
         int rid; // id
