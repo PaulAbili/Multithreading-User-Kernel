@@ -1,14 +1,15 @@
 #include "queue.h"
-#include "structures.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
+
 void initQueue(queue_t* q, int size){
-	q->queue = malloc((sizeof(int) * 8) * size);
+	q->queue = malloc(sizeof(task_t) * size);
 	q->capacity = size;
 	q->currentSize = 0;
 }
 
-void destoryQueue(queue_t* q){
+void destroyQueue(queue_t* q){
 	free(q->queue);
 }
 
@@ -39,6 +40,7 @@ bool dequeue(queue_t* q){
 	if(isEmpty(q)){
 		return false;
 	}
+	free(q->queue[0].resources);
 	for(int i = 0; i < q->currentSize - 1; i++){
 		q->queue[i] = q->queue[i+1];
 	}

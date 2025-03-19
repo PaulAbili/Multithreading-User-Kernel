@@ -6,6 +6,6 @@
 
 
 int main(int argc, char** argv){
-	setupQueues();
+	setupProgram();
 	return 0;
 }

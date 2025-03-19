@@ -1,49 +1,55 @@
 #include "scheduler.h"
-#include <semaphore.h>
 
 queue_t high, mid, low;
 queue_t waiting, complete;
 resource_queue_t resources;
 
-void setupQueues(){
+void setupProgram(){
+	setupQueues();
+        //Create Resource Queues
+	createResources();
+        //Create Tasks
+        createTask();  //producer
+        //Execute Tasks
+        executeTask(); // consumer
+        //Deallocate Memory
+        deallocate(); // should deallocate tasks in queues
+}
+
+void setupQueues(){ //Only function called in main
         initQueue(&high, 30); //should this be 30?
         initQueue(&mid, 30);
         initQueue(&low, 30);
 	initQueue(&waiting, 30);
 	initQueue(&complete, 30);
-	//Create Resource Queues
-	createResources();
-	//Create Tasks
-	//createTasks();
-	//Execute Tasks
-	executeTasks();
-	//Deallocate Memory
-	deallocate(); // should deallocate tasks in queues
 }
 
-void createResources(){
-	resource_t rArray[5];
+int createResources(){
 	for(int i = 0; i < 5; i++){
-		rArray[i].rid = i;
-		sem_init((rArray->semaphore), 0, rand() % 3 + 1);
-		if(i != 0){
-			rArray[i].next = &rArray[i-1];
+		resources.resources[i].rid = i;
+		if(sem_init(&(resources.resources[i].semaphore), 0, rand() % 3 + 1) != 0){
+			return ENOSYS;
 		}
 	}
-	resources.resources = &rArray[0];
+	return 0;
 }
 
 
-void createTasks(){
+void createTask(){
 	task_t task;
 	task.taskID = rand();
 	task.priority = rand() % 3 + 1;
 	task.duration = rand() % 6 + 1;
-	task.resources = malloc(sizeof(int) * 2);
-	task.resources[0] = 1;
-	task.resources[1] = 2;
+	int num1, num2;
+	num1 = rand() % 5 + 1;
+	num2 = rand() % 5 + 1;
+	if(num1 == num2){
+		num2 = (num2 + 1) % 5 + 1;
+	}
+	task.resources[0] = num1;
+	task.resources[1] = num2;
 	if(task.priority == 1){
-		enqueue(&low, task); // currently only for ints fix it :)
+		enqueue(&low, task);
 	} else if(task.priority == 2){
 		enqueue(&mid, task);
 	} else {
@@ -51,20 +57,23 @@ void createTasks(){
 	}
 }
 
-void executeTasks(){
+void executeTask(){
 	if(!isEmpty(&high)){
 		//do stuff at the highest priority
 	} else if(!isEmpty(&mid)){
 		// do stuff at middle priority
-	} else if(isEmpty(&low)){
+	} else if(!isEmpty(&low)){
 		// do stuff at low priority
 	}
 }
 
 void deallocate(){
-	resource_t current;
 	for(int i = 0; i < 5; i++){
-		current = resources.resources;
-		sem_destory(current->semaphore);
-		current = current.next;
+		sem_destroy(&(resources.resources[i]).semaphore);
+	}
+	destroyQueue(&high);
+	destroyQueue(&mid);
+	destroyQueue(&low);
+	destroyQueue(&waiting);
+	destroyQueue(&complete);
 }

@@ -6,7 +6,7 @@
 
 
 void initQueue(queue_t* q, int size);
-void destoryQueue(queue_t* q);
+void destroyQueue(queue_t* q);
 bool isEmpty(queue_t* q);
 bool isFull(queue_t* q);
 bool enqueue(queue_t* q, task_t value);

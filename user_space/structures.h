@@ -3,12 +3,11 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-
 typedef struct task_Structure{
         int taskID;
         int priority;
         int duration;
-        int* resources;
+        int resources[2];
 } task_t;
 
 typedef struct queue_Structure{
@@ -19,12 +18,11 @@ typedef struct queue_Structure{
 
 typedef struct resource{
         int rid; // id
-        sem_t* semaphore;
-        struct resource* next;
+        sem_t semaphore;
 } resource_t;
 
 typedef struct resource_queue{
-        resource_t* resources;
+        resource_t resources[10];
 } resource_queue_t;
 
 #endif

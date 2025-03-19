@@ -2,9 +2,11 @@
 #define SCHEDULER_H_
 #include "queue.c"
 
+void setupProgram();
 void setupQueues();
-void createResources();
-void createTasks();
-void executeTasks();
+int createResources();
+void createTask();
+void executeTask();
+void deallocate();
 
 #endif
