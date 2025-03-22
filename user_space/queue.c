@@ -40,7 +40,6 @@ bool dequeue(queue_t* q){
 	if(isEmpty(q)){
 		return false;
 	}
-	free(q->queue[0].resources);
 	for(int i = 0; i < q->currentSize - 1; i++){
 		q->queue[i] = q->queue[i+1];
 	}
@@ -57,20 +56,20 @@ task_t top(queue_t* q){
 	return q->queue[0];
 }
 
-void print(queue_t* q){
+void printQueue(queue_t* q){
 	if(isEmpty(q)){
-         // do nothing 
+         // do nothing
         } else {
-		for(int i = 0; i < q->currentSize; i++){
+		for(int i = 0; i < q->currentSize - 1; i++){
 			printf("%d, ", q->queue[i].taskID);
 		}
-		printf("\n");
+		printf("%d\n", q->queue[q->currentSize -1].taskID);
 	}
 }
 
 int find(queue_t* q, int id){
 	if(isEmpty(q)){
-                return -1; 
+                return -1;
         }
 	for(int i = 0; q->currentSize; i++){
 		if(q->queue[i].taskID == id){

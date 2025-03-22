@@ -12,7 +12,7 @@ bool isFull(queue_t* q);
 bool enqueue(queue_t* q, task_t value);
 bool dequeue(queue_t* q);
 task_t top(queue_t* q);
-void print(queue_t* q);
+void printQueue(queue_t* q);
 int find(queue_t* q, int value);
 
 #endif
