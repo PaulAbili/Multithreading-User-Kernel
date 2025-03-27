@@ -2,31 +2,11 @@
 #include <linux/kernel.h>
 #include <sys/syscall.h>
 
-#define __NR_add_task 548
-#define __NR_schedule_tasks 549
-#define __NR_acquire_resources 550
-#define __NR_release_resources 551
-
 queue_t high, mid, low;
 queue_t waiting, complete;
 resource_queue_t resources;
 
-//long sys_add_test(queue_t* q, task_t t){
-//	return syscall(__NR_add_task);
-//}
-
-//long sys_scheduele_task(void){
-//	return syscall(__NR_schedule_tasks);
-//}
-
-//	return syscall(__NR_acquire_resources);
-//}
-
-//long sys_release_resources(resource_t r[2], task_t t){
-//	return syscall(__NR_release_resources);
-//}
-
-void setupProgram(){
+void setupPthreadedProgram(){
 	setupQueues();
         //Create Resource Queues
 	createResources();
@@ -96,11 +76,7 @@ void* executeTask(){
 		// do stuff at low priority
 		task = low.queue[0];
 		dequeue(&low);
-	} else {
-		return 0; // returns bc nothing is in the queues 
 	}
-	//sys_acquire_resources(current.queue[0].resources,current.queue[0]);
-	//sys_release_resources(current.queue[0].resources,current.queue[0]);
 
 	sem_t sem = resources.resources[task.resources[0]].semaphore;
 	sem_t sem2 = resources.resources[task.resources[1]].semaphore;
@@ -109,28 +85,46 @@ void* executeTask(){
 	int result2 = sem_trywait(&sem2);
 	if(result == 0 && result2 == 0){
 		//success
-		//sleep post sem dequeue and add to completed
+		//sleep post and add to complete
 		sleep(task.duration);
 		sem_post(&sem2);
 		sem_post(&sem);
 		enqueue(&complete, task);
-	} else if(result == 0){
+	} else if(result == 0){ // if only resource 1 is available, releases it
 		sem_post(&sem);
-	} else if(result2 == 0){
+	} else if(result2 == 0){ // if only resource 2 is available
 		sem_post(&sem2);
 	}
-	if(result != 0 && result2 != 0){
-		//dequeue from current
-		//add to waiting queue
-		//use regular wait
+	if(result != 0 && result2 != 0){ // if both resources are not available, adds to waiting queue
 		enqueue(&waiting, task);
-		sem_wait(&sem);
-		sem_wait(&sem2);
-		sleep(task.duration);
-	        sem_post(&sem2);
-	        sem_post(&sem);
-	        dequeue(&waiting);
-	        enqueue(&complete, task);
+	}
+	if(!isEmpty(&waiting)){
+		task = top(&waiting);
+		sem = resources.resources[task.resources[0]].semaphore;
+		sem2 = resources.resources[task.resources[1]].semaphore;
+		result = sem_trywait(&sem);
+        	result2 = sem_trywait(&sem2);
+		if(result == 0 && result2 == 0){
+			sem_post(&sem);
+			sem_post(&sem2);
+			dequeue(&waiting);
+			if(task.priority == 0){
+				enqueue(&low, task);
+			} else if(task.priority == 1){
+				enqueue(&mid, task);
+			} else if(task.priority == 2){
+				enqueue(&high, task);
+			}
+		int* p;
+		pthread_t thread;
+		pthread_create(&thread, NULL, &executeTask, NULL);
+		pthread_join(thread, (void**) &p);
+		free(p);
+		} else if(result == 0){
+			sem_post(&sem);
+		} else if(result2 == 0){
+			sem_post(&sem2);
+		}
 	}
 	return 0;
 }
@@ -146,6 +140,8 @@ void deallocate(){
 	destroyQueue(&complete);
 }
 
+
+// pthread creation methods
 void createProducerThread(){
 	int* p;
 	pthread_t proThreads[3];
@@ -182,6 +178,6 @@ void createConsumerThread(){
         for(int i = 0; i < 3; i++){
                 pthread_join(conThreads[i], (void**) &c);
 		sleep(1);
- 	       }
+ 	}
 	free(c);
 }

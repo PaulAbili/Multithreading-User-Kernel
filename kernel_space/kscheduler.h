@@ -1,12 +1,10 @@
-#ifndef SCHEDULER_H_
-#define SCHEDULER_H_
-#include "queue.c"
-#include <string.h>
-#include <unistd.h>
+#ifndef KSCHEDULER_H_
+#define KSCHEDULER_H_
+#include "kqueue.c"
+#include <linux/string.h>
+#include <linux/unistd.h>
 #include <sys/wait.h>
-#include <ctype.h>
-
-
+#include <linux/ctype.h>
 
 void setupPthreadedProgram();
 void setupQueues();

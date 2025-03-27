@@ -2,6 +2,6 @@
 
 
 int main(int argc, char** argv){
-	setupProgram();
+	setupPthreadedProgram();
 	return 0;
 }
