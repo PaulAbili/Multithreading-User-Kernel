@@ -419,3 +419,5 @@
 549     common  schedule_tasks		sys_schedule_tasks
 550     common  acquire_resources	sys_acquire_resources
 551     common  release_resources	sys_release_resources
+552	common	destroy_scheduler	sys_destroy_scheduler
+553	common	print_queues		sys_print_queues

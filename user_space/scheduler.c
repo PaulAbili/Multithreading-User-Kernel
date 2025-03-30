@@ -50,14 +50,17 @@ void* createTask(){
 	task.resources[0] = num1;
 	task.resources[1] = num2;
 	if(task.priority == 1){
-		//sys_add_task(&low, task);
+		pthread_mutex_lock(&(low.mutex));
 		enqueue(&low, task);
+		pthread_mutex_unlock(&(low.mutex));
 	} else if(task.priority == 2){
-		//sys_add_task(&mid, task);
+		pthread_mutex_unlock(&(mid.mutex));
 		enqueue(&mid, task);
+		pthread_mutex_unlock(&(mid.mutex));
 	} else {
-		//sys_add_task(&high, task);
+		pthread_mutex_lock(&(high.mutex));
 		enqueue(&high, task);
+		pthread_mutex_unlock(&(high.mutex));
 	}
 	return 0;
 }
@@ -67,15 +70,21 @@ void* executeTask(){
 	if(!isEmpty(&high)){
 		//do stuff at the highest priority
 		task = high.queue[0];
+		pthread_mutex_lock(&(high.mutex));
 		dequeue(&high);
+		pthread_mutex_unlock(&(high.mutex));
 	} else if(!isEmpty(&mid)){
 		// do stuff at middle priority
 		task = mid.queue[0];
+		pthread_mutex_lock(&(mid.mutex));
 		dequeue(&mid);
+		pthread_mutex_unlock(&(mid.mutex));
 	} else if(!isEmpty(&low)){
 		// do stuff at low priority
 		task = low.queue[0];
+		pthread_mutex_lock(&(low.mutex));
 		dequeue(&low);
+		pthread_mutex_unlock(&(low.mutex));
 	}
 
 	sem_t sem = resources.resources[task.resources[0]].semaphore;
@@ -89,14 +98,18 @@ void* executeTask(){
 		sleep(task.duration);
 		sem_post(&sem2);
 		sem_post(&sem);
+		pthread_mutex_lock(&(complete.mutex));
 		enqueue(&complete, task);
+		pthread_mutex_unlock(&(complete.mutex));
 	} else if(result == 0){ // if only resource 1 is available, releases it
 		sem_post(&sem);
 	} else if(result2 == 0){ // if only resource 2 is available
 		sem_post(&sem2);
 	}
 	if(result != 0 && result2 != 0){ // if both resources are not available, adds to waiting queue
+		pthread_mutex_lock(&(waiting.mutex));
 		enqueue(&waiting, task);
+		pthread_mutex_unlock(&(waiting.mutex));
 	}
 	if(!isEmpty(&waiting)){
 		task = top(&waiting);
@@ -107,14 +120,23 @@ void* executeTask(){
 		if(result == 0 && result2 == 0){
 			sem_post(&sem);
 			sem_post(&sem2);
+			pthread_mutex_lock(&(waiting.mutex));
 			dequeue(&waiting);
-			if(task.priority == 0){
-				enqueue(&low, task);
-			} else if(task.priority == 1){
-				enqueue(&mid, task);
-			} else if(task.priority == 2){
-				enqueue(&high, task);
-			}
+			pthread_mutex_unlock(&(waiting.mutex));
+			        if(task.priority == 1){
+         			       	pthread_mutex_lock(&(low.mutex));
+			               	enqueue(&low, task);
+					pthread_mutex_unlock(&(low.mutex));
+        			} else if(task.priority == 2){
+        			        pthread_mutex_unlock(&(mid.mutex));
+               				enqueue(&mid, task);
+                			pthread_mutex_unlock(&(mid.mutex));
+       				} else {
+        			        pthread_mutex_lock(&(high.mutex));
+        			        enqueue(&high, task);
+                			pthread_mutex_unlock(&(high.mutex));
+        			}
+
 		int* p;
 		pthread_t thread;
 		pthread_create(&thread, NULL, &executeTask, NULL);

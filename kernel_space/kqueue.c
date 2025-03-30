@@ -1,17 +1,15 @@
 #include "kqueue.h"
-#include <linux/slab.h> //kmalloc
-#include <stdlib.h> // allowed
-#include <stdio.h> // allowed
-#include <linux/errno.h> //
 
 void initQueue(queue_t* q, int size){
 	q->queue = kmalloc(sizeof(task_t) * size, GFP_KERNEL);
 	q->capacity = size;
 	q->currentSize = 0;
+	mutex_init(&(q->mutex));
 }
 
 void destroyQueue(queue_t* q){
 	kfree(q->queue);
+	mutex_destroy(&(q->mutex));
 }
 
 int isEmpty(queue_t* q){
@@ -38,10 +36,11 @@ int enqueue(queue_t* q, task_t value){
 }
 
 int dequeue(queue_t* q){
+	int i;
 	if(isEmpty(q)){
 		return 0;
 	}
-	for(int i = 0; i < q->currentSize - 1; i++){
+	for(i = 0; i < q->currentSize - 1; i++){
 		q->queue[i] = q->queue[i+1];
 	}
 	q->currentSize--;
@@ -58,10 +57,10 @@ task_t top(queue_t* q){
 }
 
 void printQueue(queue_t* q){
+	int i;
 	if(isEmpty(q)){
          // do nothing
         } else {
-		int i;
 		for(i = 0; i < q->currentSize - 1; i++){
 			printk("%d, ", q->queue[i].taskID);
 		}
@@ -70,10 +69,10 @@ void printQueue(queue_t* q){
 }
 
 int find(queue_t* q, int id){
+	int i;
 	if(isEmpty(q)){
                 return -1;
         }
-	int i;
 	for(i = 0; q->currentSize; i++){
 		if(q->queue[i].taskID == id){
 			return i;

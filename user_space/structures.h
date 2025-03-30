@@ -14,6 +14,7 @@ typedef struct queue_Structure{
         task_t* queue;
         int capacity;
         int currentSize;
+	pthread_mutex_t mutex;
 }queue_t;
 
 typedef struct resource{

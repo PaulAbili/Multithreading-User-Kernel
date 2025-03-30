@@ -3,7 +3,6 @@
 
 #include "kstructures.h"
 
-
 void initQueue(queue_t* q, int size);
 void destroyQueue(queue_t* q);
 int isEmpty(queue_t* q);

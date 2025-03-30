@@ -7,10 +7,12 @@ void initQueue(queue_t* q, int size){
 	q->queue = malloc(sizeof(task_t) * size);
 	q->capacity = size;
 	q->currentSize = 0;
+	pthread_mutex_init(&(q->mutex), NULL);
 }
 
 void destroyQueue(queue_t* q){
 	free(q->queue);
+	pthread_mutex_destroy(&(q->mutex));
 }
 
 bool isEmpty(queue_t* q){
