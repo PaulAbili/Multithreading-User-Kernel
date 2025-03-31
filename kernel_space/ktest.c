@@ -1,12 +1,13 @@
 #define _GNU_SOURCE
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/syscall.h>
-#include <pthread.h>
 #include <errno.h>
 #include <string.h>
+
+#include <linux/kernel.h>
+#include <sys/syscall.h>
+#include <pthread.h>
 
 
 #define __NR_add_task 548
@@ -17,22 +18,22 @@
 #define __NR_print_queues 553
 
 void* add(){
-        syscall(__NR_add_task);
+        long val = syscall(__NR_add_task);
         return 0;
 }
 
 void* run(){
-        int* ptr = malloc(sizeof(int) * 2);
-	int result = syscall(__NR_acquire_resources, ptr);
-        if(result != -1 && result != 3){
-                syscall(__NR_release_resources, ptr[0], ptr[1]);
-        }
-        free(ptr);
+        //int* ptr = malloc(sizeof(int) * 2);
+	//int result = syscall(__NR_acquire_resources, ptr);
+        //if(result != -1 && result != 3){
+        //        syscall(__NR_release_resources, ptr[0], ptr[1]);
+        //}
+        //free(ptr);
         return 0;
 }
 
 int main(){
-	syscall(__NR_schedule_tasks);
+	long scheduler = syscall(__NR_schedule_tasks);
 	pthread_t pthread[5];
 	pthread_t cthread[5];
 	int i;
@@ -44,16 +45,17 @@ int main(){
 	for(i = 0; i < 5; i++){
 		pthread_join(pthread[i], (void**) &p);
 	}
-	syscall(__NR_print_queues);
+	long print1 = syscall(__NR_print_queues);
 	for(i = 0; i < 5; i++){
 		pthread_create(&cthread[i], NULL, &run, NULL);
 	}
 	for(i = 0; i < 5; i++){
 		pthread_join(cthread[i], (void**) &c);
 	}
-	syscall(__NR_print_queues);
-	syscall(__NR_destroy_scheduler);
+	long print2 = syscall(__NR_print_queues);
+	long destory = syscall(__NR_destroy_scheduler);
 	free(p);
 	free(c);
+	return 0;
 }
 

@@ -45,5 +45,5 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(OBJS) $(TARGET) core
 
-run: main
-	./main
+run: utest
+	./utest

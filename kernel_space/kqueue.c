@@ -61,6 +61,7 @@ void printQueue(queue_t* q){
 	if(isEmpty(q)){
          // do nothing
         } else {
+		printk("Printing Queue: ");
 		for(i = 0; i < q->currentSize - 1; i++){
 			printk("%d, ", q->queue[i].taskID);
 		}
