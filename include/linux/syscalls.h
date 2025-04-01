@@ -1384,7 +1384,7 @@ int __sys_setsockopt(int fd, int level, int optname, char __user *optval,
 
 asmlinkage long sys_add_task(void);
 asmlinkage long sys_schedule_tasks(void);
-asmlinkage long sys_acquire_resources(int* ptr);
+asmlinkage long sys_acquire_resources(int __user* ptr);
 asmlinkage long sys_release_resources(int i, int j);
 asmlinkage long sys_destroy_scheduler(void);
 asmlinkage long sys_print_queues(void);

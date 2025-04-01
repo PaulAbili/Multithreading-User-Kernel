@@ -1,9 +1,4 @@
 #include "kscheduler.h"
-#include <linux/random.h>
-#include <linux/delay.h>
-#include <linux/string.h>
-#include <linux/unistd.h>
-#include <linux/ctype.h>
 
 int createResources(resource_queue_t* resources){
 	int i;
@@ -47,20 +42,20 @@ task_t getTask(queue_t* high, queue_t* mid, queue_t* low){
 	task_t task;
 	if(!isEmpty(&(*high))){
 		//do stuff at the highest priority
-		task = high->queue[0];
 		mutex_lock(&(high->mutex));
+		task = high->queue[0];
 		dequeue(&(*high));
 		mutex_unlock(&(high->mutex));
 	} else if(!isEmpty(&(*mid))){
 		// do stuff at middle priority
-		task = mid->queue[0];
 		mutex_lock(&(mid->mutex));
+		task = mid->queue[0];
 		dequeue(&(*mid));
 		mutex_lock(&(mid->mutex));
 	} else if(!isEmpty(&(*low))){
 		// do stuff at low priority
-		task = low->queue[0];
 		mutex_lock(&(low->mutex));
+		task = low->queue[0];
 		dequeue(&(*low));
 		mutex_unlock(&(low->mutex));
 	}
@@ -71,7 +66,8 @@ task_t getWaiting(queue_t* waiting){
 	task_t task;
         if(!isEmpty(&(*waiting))){
                 //dequeue waiting
-                task = waiting->queue[0];
+                mutex_lock(&(waiting->mutex));
+		task = waiting->queue[0];
                 mutex_lock(&(waiting->mutex));
                 dequeue(&(*waiting));
                 mutex_unlock(&(waiting->mutex));
@@ -86,15 +82,6 @@ void executeTask(resource_queue_t* resources, queue_t* completed, task_t task){
 	mutex_lock(&(completed->mutex));
 	enqueue(&(*completed), task);
 	mutex_unlock(&(completed->mutex));
-}
-
-void emptyWaiting(resource_queue_t* resources, queue_t* waiting, queue_t* completed, task_t task){
-        msleep(task.duration);
-        up(&(resources->resources[task.resources[0]].semaphore));
-        up(&(resources->resources[task.resources[1]].semaphore));
-        mutex_lock(&(waiting->mutex));
-	enqueue(&(*completed), task);
-	mutex_unlock(&(waiting->mutex));
 }
 
 void addToWait(queue_t* waiting, task_t task){
