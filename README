@@ -1,4 +1,4 @@
-Project 2: Task Scheduler with Priority and Resource Constraints
+Task Scheduler with Priority and Resource Constraints
 
 Contact
 Author: Paul Abili
@@ -6,7 +6,11 @@ Campus ID:QD36016
 Email:pabili1@umbc.edu
 
 Overview
-The goal of this project is to simulate a task scheduler using sleep & msleep to simulate task execution in user space and kernel space code respectively. Speaking of which, the project is split into two main sections, the user space section and & the kernel section, which individually attempt the aforementioned task scheduler. In my implementation, the kernel_space code is NOT an exact logic copy of the user space code. This is due to the way I implemented the user space code, where I included pthreads inside of the project, rather than using them in the tester, and the way coded in locking. Due to all of that, I needed to slightly change the logic of the kernel code although they largely perform the same. Each task has 2 resources and there are 5 resources inside of the task scheduler. Additionally, I don’t have a separate folder for the tests, they exist within their respective space folders, user space and kernel space.
+The goal of this project is to simulate a task scheduler using sleep & msleep to simulate task execution in user space and kernel space code respectively. 
+Speaking of which, the project is split into two main sections, the user space section and & the kernel section, which individually attempt the aforementioned task scheduler. 
+In my implementation, the kernel_space code is NOT an exact logic copy of the user space code. This is due to the way I implemented the user space code, where I included pthreads inside of the project, rather than using them in the tester, and the way coded in locking. 
+Due to all of that, I needed to slightly change the logic of the kernel code although they largely perform the same. 
+Each task has 2 resources and there are 5 resources inside of the task scheduler. Additionally, I don’t have a separate directories for the tests, they exist within their respective space folders, user space and kernel space.
 
 Installation and Setup
 Libraries used:
@@ -16,10 +20,10 @@ User space:
 #include <errno.h>
 #include <stdbool.h>
 #include <linux/kernel.h>
-#include <sys/syscall.h> // honestly don’t think I needed this and the preceding one but I for some reason had it ..?
+#include <sys/syscall.h> 
 #include <string.h>
 #include <unistd.h>
-#include <sys/wait.h> // this too
+#include <sys/wait.h> 
 #include <ctype.h>
 #include <pthread.h>
 #include <semaphore.h>
@@ -72,7 +76,6 @@ I had a lot of issues
 Most of my issues stemmed from not understanding the process of converting from user_space to kernel, however, some are simply because of my unfamiliarity with coding large projects in C.
 
 Creating the user space portion of this project was relatively uneventful, other than everything to do with my structs having pointer members so I simply switched them to arrays.
-
 
 Additionally I experienced issues with finding information on kernel files. It was honestly kind of overwhelming for me to figure out which libraries are valid in the kernel and to figure out if not, which library I should have been including. Once I figured the libraries I needed it became a lot less daunting.
 
