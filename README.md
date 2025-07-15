@@ -64,12 +64,11 @@ In Tester: N/A
 ##### User Space tester: 
 Build & Run:  make run
 ##### Kernel Space tester: 
-Build: gcc ktest.c -g -o -pthread ktest
+Build: gcc [ktest.c](kernel_space/ktest.c) -g -o -pthread ktest
 Run: ./ktest
 
-#### User-Space Drivers
-##### User Space: scheduler.c utest.c
-#### Kernel Space: ktest.c
+#### User Space: [scheduler.c](user_space/scheduler.c) [utest.c](user_space/utest.c)
+#### Kernel Space: [ktest.c](kernel_space/ktest.c)
  
 ### Testing
 <p>I simply tested to see if the tasks were created after running the producer thread, tested to see if the tasks were put into different queues & I tested to see if the tasks were all placed into the completed queue at the end of execution</p>
@@ -77,7 +76,6 @@ Run: ./ktest
 ### Troubleshooting
 
 <p> Most issues stemmed from not understanding the process of converting from user_space to kernel </p>
-
 <p> Additionally I experienced issues with finding information on kernel files. </p>
 
 ### References
