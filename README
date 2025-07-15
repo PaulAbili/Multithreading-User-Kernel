@@ -1,20 +1,20 @@
 # Task Scheduler with Priority and Resource Constraints
 
-## Contact
+### Contact
 Author: Paul Abili
 Campus ID:QD36016
 Email:pabili1@umbc.edu
 
-## Overview
+### Overview
 The goal of this project is to simulate a task scheduler using sleep & msleep to simulate task execution in user space and kernel space code respectively. 
 Speaking of which, the project is split into two main sections, the user space section and & the kernel section, which individually attempt the aforementioned task scheduler. 
 In my implementation, the kernel_space code is NOT an exact logic copy of the user space code. This is due to the way I implemented the user space code, where I included pthreads inside of the project, rather than using them in the tester, and the way coded in locking. 
 Due to all of that, I needed to slightly change the logic of the kernel code although they largely perform the same. 
 Each task has 2 resources and there are 5 resources inside of the task scheduler. Additionally, I don’t have a separate directories for the tests, they exist within their respective space folders, user space and kernel space.
 
-## Installation and Setup
-### Libraries used:
-#### User space:
+### Installation and Setup
+#### Libraries used:
+##### User space:
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -30,7 +30,7 @@ Each task has 2 resources and there are 5 resources inside of the task scheduler
 
 In Tester: N/A
 
-#### Kernel space:
+##### Kernel space:
 #include <linux/random.h>
 #include <linux/delay.h>
 #include <linux/string.h>
@@ -47,7 +47,7 @@ In Tester: N/A
 #include <linux/syscalls.h>
 #include <linux/errno.h>
 
-#### In tester:
+##### In tester:
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -56,22 +56,22 @@ In Tester: N/A
 #include <errno.h>
 #include <string.h>
 
-## Build and Compile
-### Build & run this program with: 
-#### User Space tester: 
+### Build and Compile
+#### Build & run this program with: 
+##### User Space tester: 
 Build & Run:  make run
-#### Kernel Space tester: gcc ktest.c -g -o -pthread ktest
+##### Kernel Space tester: gcc ktest.c -g -o -pthread ktest
 Run: ./ktest
 
-### User-Space Drivers
-#### User Space: scheduler.c utest.c
-### Kernel Space: ktest.c
+#### User-Space Drivers
+##### User Space: scheduler.c utest.c
+#### Kernel Space: ktest.c
 In a sense, in my user space implementation, scheduler.c was my driver and utest.c simply called it, for the kernel section ktest.c is my driver
  
-## Testing
+### Testing
 I simply tested to see if the tasks were created after running the producer thread, tested to see if the tasks were put into different queues & I tested to see if the tasks were all placed into the completed queue at the end of execution
 
-## Troubleshooting
+### Troubleshooting
 I had a lot of issues
 Most of my issues stemmed from not understanding the process of converting from user_space to kernel, however, some are simply because of my unfamiliarity with coding large projects in C.
 
