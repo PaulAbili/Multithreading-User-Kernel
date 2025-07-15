@@ -1,110 +1,100 @@
 # Task Scheduler with Priority and Resource Constraints
 
 ### Contact
-Author: Paul Abili
-Campus ID:QD36016
-Email:pabili1@umbc.edu
+**Author:** Paul Abili <br>
+**Campus ID:** QD36016 <br>
+**Email:** pabili1@umbc.edu <br>
 
 ### Overview
-The goal of this project is to simulate a task scheduler using sleep & msleep to simulate task execution in user space and kernel space code respectively. 
-Speaking of which, the project is split into two main sections, the user space section and & the kernel section, which individually attempt the aforementioned task scheduler. 
-In my implementation, the kernel_space code is NOT an exact logic copy of the user space code. This is due to the way I implemented the user space code, where I included pthreads inside of the project, rather than using them in the tester, and the way coded in locking. 
-Due to all of that, I needed to slightly change the logic of the kernel code although they largely perform the same. 
-Each task has 2 resources and there are 5 resources inside of the task scheduler. Additionally, I don’t have a separate directories for the tests, they exist within their respective space folders, user space and kernel space.
+<p>The goal of this project is to simulate a task scheduler using sleep & msleep to simulate task execution in user space and kernel space code respectively.</p>
+
+<p>Speaking of which, the project is split into two main sections, the user space section and & the kernel section, which individually attempt the aforementioned task scheduler.</p>
+
+<p>In my implementation, the kernel_space code is NOT an exact logic copy of the user space code. This is due to the way I implemented the user space code, where I included pthreads inside of the project, rather than using them in the tester, and the way coded in locking.</p>
+
+<p>Due to all of that, I needed to slightly change the logic of the kernel code although they largely perform the same. 
+Each task has 2 resources and there are 5 resources inside of the task scheduler. Additionally, I don’t have a separate directories for the tests, they exist within their respective space folders, user space and kernel space.</p>
 
 ### Installation and Setup
 #### Libraries used:
 ##### User space:
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <stdbool.h>
-#include <linux/kernel.h>
-#include <sys/syscall.h> 
-#include <string.h>
-#include <unistd.h>
-#include <sys/wait.h> 
-#include <ctype.h>
-#include <pthread.h>
-#include <semaphore.h>
+#include <stdlib.h> <br>
+#include <stdio.h> <br>
+#include <errno.h> <br>
+#include <stdbool.h> <br>
+#include <linux/kernel.h> <br>
+#include <sys/syscall.h> <br>
+#include <string.h> <br>
+#include <unistd.h> <br>
+#include <sys/wait.h> <br>
+#include <ctype.h> <br>
+#include <pthread.h> <br>
+#include <semaphore.h> <br>
 
 In Tester: N/A
 
 ##### Kernel space:
-#include <linux/random.h>
-#include <linux/delay.h>
-#include <linux/string.h>
-#include <linux/unistd.h>
-#include <linux/ctype.h>
-#include <linux/mutex.h>
-#include <linux/semaphore.h>
-#include <linux/wait.h>
-#include <linux/slab.h>
-#include <linux/uaccess.h>
-#include <linux/printk.h>
-#include <linux/sched.h>
-#include <linux/kernel.h>
-#include <linux/syscalls.h>
-#include <linux/errno.h>
+#include <linux/random.h> <br>
+#include <linux/delay.h> <br>
+#include <linux/string.h> <br>
+#include <linux/unistd.h> <br>
+#include <linux/ctype.h> <br>
+#include <linux/mutex.h> <br>
+#include <linux/semaphore.h> <br>
+#include <linux/wait.h> <br>
+#include <linux/slab.h> <br>
+#include <linux/uaccess.h> <br>
+#include <linux/printk.h> <br>
+#include <linux/sched.h> <br>
+#include <linux/kernel.h> <br>
+#include <linux/syscalls.h> <br>
+#include <linux/errno.h> <br>
 
 ##### In tester:
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/syscall.h>
-#include <pthread.h>
-#include <errno.h>
-#include <string.h>
+#include <stdio.h> <br>
+#include <stdlib.h> <br>
+#include <unistd.h> <br>
+#include <sys/syscall.h> <br>
+#include <pthread.h> <br>
+#include <errno.h> <br>
+#include <string.h> <br>
 
 ### Build and Compile
 #### Build & run this program with: 
 ##### User Space tester: 
 Build & Run:  make run
-##### Kernel Space tester: gcc ktest.c -g -o -pthread ktest
+##### Kernel Space tester: 
+Build: gcc ktest.c -g -o -pthread ktest
 Run: ./ktest
 
 #### User-Space Drivers
 ##### User Space: scheduler.c utest.c
 #### Kernel Space: ktest.c
-In a sense, in my user space implementation, scheduler.c was my driver and utest.c simply called it, for the kernel section ktest.c is my driver
  
 ### Testing
-I simply tested to see if the tasks were created after running the producer thread, tested to see if the tasks were put into different queues & I tested to see if the tasks were all placed into the completed queue at the end of execution
+<p>I simply tested to see if the tasks were created after running the producer thread, tested to see if the tasks were put into different queues & I tested to see if the tasks were all placed into the completed queue at the end of execution</p>
 
 ### Troubleshooting
-I had a lot of issues
-Most of my issues stemmed from not understanding the process of converting from user_space to kernel, however, some are simply because of my unfamiliarity with coding large projects in C.
 
-Creating the user space portion of this project was relatively uneventful, other than everything to do with my structs having pointer members so I simply switched them to arrays.
+<p> Most issues stemmed from not understanding the process of converting from user_space to kernel </p>
 
-Additionally I experienced issues with finding information on kernel files. It was honestly kind of overwhelming for me to figure out which libraries are valid in the kernel and to figure out if not, which library I should have been including. Once I figured the libraries I needed it became a lot less daunting.
+<p> Additionally I experienced issues with finding information on kernel files. </p>
 
-When converting, I initially thought we were meant to use the actual kqueue data structure built into the kernel, that experience and research was very confusing
+### References
+#### External Sources
 
-The videos helped a lot
-
-My github repo got corrupted —> was easily the easiest hurdle to get over, google had a quick fix
-
-Rebuilding the kernel is honestly the worst programming experience I’ve had thus far
-
-After I finally built my kernel I experienced linking issues where my syscalls were apparently not defined so I had to rebuild and rebuild and rebuild, and finally there is no more time left to complete this project and although I’ve spent so much time and effort, the syscall linking still isn’t working
-
-I finally fixed it, there were not linking issues I’m just stupid for using Valgrind, I had to fix some of my syscall logic
-
-## References
-### External Sources
-I looked at a lot of sources to attempt to figure out kernel code works
-https://yarchive.net/comp/linux/semaphores.html
- https://docs.kernel.org/locking/locktypes.html#semaphore
-https://kau-boys.com/3052/web-development/repair-a-broken-git-repository-file-system
-https://elixir.bootlin.com/linux/2.2.17pre16/source/include/linux/delay.h
-https://man7.org/linux/man-pages/man3/pthread_create.3.html
-https://docs.huihoo.com/doxygen/linux/kernel/3.7/linux_2random_8h.html#a1aaff17c5fc417e8e98fc4b5263ba5f3
-https://elixir.bootlin.com/linux/v4.3/ident/get_random_bytes
-https://litux.nl/mirror/kerneldevelopment/0672327201/ch11lev1sec4.html
-https://stackoverflow.com/questions/13291353/iso-c90-forbids-mixed-declarations-and-code-in-c
-https://embetronicx.com/tutorials/linux/device-drivers/linux-device-drivers-tutorial-kernel-thread/#kthread_create
-https://man.netbsd.org/kqueue.2
-https://forums.freebsd.org/threads/using-kqueue-in-event-driven-multithread-application.68376/
-https://wiki.netbsd.org/tutorials/kqueue_tutorial/
+Sources mainly focused on kernel code implmentation <br>
+https://yarchive.net/comp/linux/semaphores.html <br>
+https://docs.kernel.org/locking/locktypes.html#semaphore <br>
+https://kau-boys.com/3052/web-development/repair-a-broken-git-repository-file-system <br>
+https://elixir.bootlin.com/linux/2.2.17pre16/source/include/linux/delay.h <br>
+https://man7.org/linux/man-pages/man3/pthread_create.3.html <br>
+https://docs.huihoo.com/doxygen/linux/kernel/3.7/linux_2random_8h.html#a1aaff17c5fc417e8e98fc4b5263ba5f3 <br>
+https://elixir.bootlin.com/linux/v4.3/ident/get_random_bytes <br>
+https://litux.nl/mirror/kerneldevelopment/0672327201/ch11lev1sec4.html <br>
+https://stackoverflow.com/questions/13291353/iso-c90-forbids-mixed-declarations-and-code-in-c <br>
+https://embetronicx.com/tutorials/linux/device-drivers/linux-device-drivers-tutorial-kernel-thread/#kthread_create <br>
+https://man.netbsd.org/kqueue.2 <br>
+https://forums.freebsd.org/threads/using-kqueue-in-event-driven-multithread-application.68376/ <br>
+https://wiki.netbsd.org/tutorials/kqueue_tutorial/ <br>
 
