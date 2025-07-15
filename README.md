@@ -6,6 +6,7 @@
 **Email:** pabili1@umbc.edu <br>
 
 ### Overview
+
 <p>The goal of this project is to simulate a task scheduler using sleep & msleep to simulate task execution in user space and kernel space code respectively.</p>
 
 <p>Speaking of which, the project is split into two main sections, the user space section and & the kernel section, which individually attempt the aforementioned task scheduler.</p>
@@ -18,6 +19,7 @@ Each task has 2 resources and there are 5 resources inside of the task scheduler
 ### Installation and Setup
 #### Libraries used:
 ##### User space:
+
 #include <stdlib.h> <br>
 #include <stdio.h> <br>
 #include <errno.h> <br>
@@ -34,6 +36,7 @@ Each task has 2 resources and there are 5 resources inside of the task scheduler
 In Tester: N/A
 
 ##### Kernel space:
+
 #include <linux/random.h> <br>
 #include <linux/delay.h> <br>
 #include <linux/string.h> <br>
@@ -51,6 +54,7 @@ In Tester: N/A
 #include <linux/errno.h> <br>
 
 ##### In tester:
+
 #include <stdio.h> <br>
 #include <stdlib.h> <br>
 #include <unistd.h> <br>
@@ -62,8 +66,10 @@ In Tester: N/A
 ### Build and Compile
 #### Build & run this program with: 
 ##### User Space tester: 
+
 Build & Run:  make run
 ##### Kernel Space tester: 
+
 Build: gcc [ktest.c](kernel_space/ktest.c) -g -o -pthread ktest
 Run: ./ktest
 
@@ -71,6 +77,7 @@ Run: ./ktest
 #### Kernel Space: [ktest.c](kernel_space/ktest.c)
  
 ### Testing
+
 <p>I simply tested to see if the tasks were created after running the producer thread, tested to see if the tasks were put into different queues & I tested to see if the tasks were all placed into the completed queue at the end of execution</p>
 
 ### Troubleshooting
